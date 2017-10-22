@@ -124,18 +124,13 @@ rule "Should work 2 consecutive days worth of shift"
                 $firstEnd : getTimeSlot().getEndDateTime(),
                 $firstDay : getTimeSlot().getStartDateTime().toLocalDate())
         $s2 : ShiftAssignment(
-                employee != null,
                 $e == employee,
+                $firstEnd < getTimeSlot().getEndDateTime(),
                 $firstDay == getTimeSlot().getStartDateTime().toLocalDate(),
                 this != $s1
               )
-        $s3 : ShiftAssignment(
-                employee != null,
-                employee == $e,
-                $firstEnd <= getTimeSlot().getEndDateTime(),
-                this != $s2)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 10);
+        scoreHolder.addSoftConstraintMatch(kcontext, 5);
 end
 */
 
