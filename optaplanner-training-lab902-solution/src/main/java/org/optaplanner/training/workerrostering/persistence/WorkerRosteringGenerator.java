@@ -49,7 +49,7 @@ public class WorkerRosteringGenerator {
 //        new WorkerRosteringGenerator().generateAndWriteRoster(20, 28, true);
 //        new WorkerRosteringGenerator().generateAndWriteRoster(40, 28 * 2, true);
 //        new WorkerRosteringGenerator().generateAndWriteRoster(80, 28 * 4, true);
-        new WorkerRosteringGenerator().generateAndWriteRoster(34, 28, false);
+        new WorkerRosteringGenerator().generateAndWriteRoster(34, 14, false);
     }
 
     private final StringDataGenerator employeeNameGenerator = StringDataGenerator.build10kFullNames();

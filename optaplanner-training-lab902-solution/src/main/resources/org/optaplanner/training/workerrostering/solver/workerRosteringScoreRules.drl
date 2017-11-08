@@ -42,7 +42,7 @@ rule "Required skill for a shift"
                 !getSpot().getRequiredSkill().toString().equals("Any"),
                 !getEmployee().getSkillName().equals(getSpot().getRequiredSkill().toString()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -100);
+        scoreHolder.addHardConstraintMatch(kcontext, -59);
 end
 
 rule "Unavailable time slots for an employee"
@@ -51,7 +51,7 @@ rule "Unavailable time slots for an employee"
                 employee != null,
                 getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -50);
+        scoreHolder.addHardConstraintMatch(kcontext, -39);
 end
 
 rule "At most one shift assignment per day per employee"
@@ -65,7 +65,7 @@ rule "At most one shift assignment per day per employee"
                 getTimeSlot().getStartDateTime().toLocalDate() == $leftDay,
                 this != $s)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -100);
+        scoreHolder.addHardConstraintMatch(kcontext, -91);
 end
 
 rule "No 2 shifts within 12 hours from each other"
@@ -80,7 +80,7 @@ rule "No 2 shifts within 12 hours from each other"
                 $leftEndDateTime.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) <12,
                 this != $s)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -100);
+        scoreHolder.addHardConstraintMatch(kcontext, -87);
 end
 
 rule "Get a 48 hours rest every 2 days"
@@ -107,14 +107,14 @@ rule "Get a 48 hours rest every 2 days"
             )
         ShiftAssignment(this == $s3)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -100);
+        scoreHolder.addHardConstraintMatch(kcontext, -97);
 end
 
 // ############################################################################
 // Hard constraints (Positive)
 // ############################################################################
 
-/*
+
 rule "Should work 2 consecutive days worth of shift"
     when
 
@@ -132,7 +132,6 @@ rule "Should work 2 consecutive days worth of shift"
     then
         scoreHolder.addSoftConstraintMatch(kcontext, 5);
 end
-*/
 
 rule "Should be working in the same shift"
     when
@@ -151,13 +150,13 @@ rule "Should be working in the same shift"
                 $firstDay != getTimeSlot().getStartDateTime().toLocalDate())
         ShiftAssignment(this == $s2)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 10);
+        scoreHolder.addHardConstraintMatch(kcontext, 11);
 end
 
 // ############################################################################
 // Soft constraints
 // ############################################################################
-
+/*
 rule "Fairness: all employees should work about the same number of shifts"
     when
         $e : Employee()
@@ -187,3 +186,4 @@ rule "Affinity: assign an employee to the same spot as much as possible"
         // Positive to anti-balance it across spot-employee pairs
         scoreHolder.addSoftConstraintMatch(kcontext, 100);
 end
+*/

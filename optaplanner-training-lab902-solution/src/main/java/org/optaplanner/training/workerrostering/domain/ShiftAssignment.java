@@ -20,7 +20,7 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.training.workerrostering.optional.domain.MovableShiftAssignmentFilter;
 
-@PlanningEntity(movableEntitySelectionFilter = MovableShiftAssignmentFilter.class)
+@PlanningEntity(movableEntitySelectionFilter = MovableShiftAssignmentFilter.class, difficultyComparatorClass = ShiftAssignmentDifficultyWeight.class)
 public class ShiftAssignment {
 
     private final Spot spot;

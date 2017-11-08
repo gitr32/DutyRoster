@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solver>
   <!--<environmentMode>FAST_ASSERT</environmentMode>-->
-  <scanAnnotatedClasses/>
-
+  <scanAnnotatedClasses>
+      <packageInclude>org.optaplanner.training.workerrostering</packageInclude>
+  </scanAnnotatedClasses>
+  
   <scoreDirectorFactory>
     <scoreDrl>org/optaplanner/training/workerrostering/solver/workerRosteringScoreRules.drl</scoreDrl>
   </scoreDirectorFactory>
+  
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    <!-- Speedup that can be applied to most, but not all use cases: -->
+  </constructionHeuristic>
 
   <termination>
-    <secondsSpentLimit>30</secondsSpentLimit>
+    <secondsSpentLimit>360</secondsSpentLimit>
   </termination>
+  <localSearch>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
 
 </solver>
