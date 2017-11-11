@@ -359,7 +359,25 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                     .collect(Collectors.groupingBy(
                     shiftAssignment -> Pair.of(shiftAssignment.getEmployee(), shiftAssignment.getTimeSlot()),
                     Collectors.toList()));
-
+            
+            writeGridSheet("Employee roster", new String[]{"Name"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
+                row.createCell(0).setCellValue(employee.getName());
+            }, (Cell cell, Pair<Employee, TimeSlot> pair) -> {
+                Employee employee = pair.getKey();
+                TimeSlot timeSlot = pair.getValue();
+                if (employee.getUnavailableTimeSlotSet().contains(timeSlot)) {
+                    cell.setCellStyle(unavailableStyle);
+                }
+                List<ShiftAssignment> shiftAssignmentList = employeeMap.get(pair);
+                if (shiftAssignmentList == null) {
+                    cell.setCellValue(" "); // TODO HACK to get a clearer xlsx file
+                    return;
+                }
+                cell.setCellValue(shiftAssignmentList.stream()
+                        .map((shiftAssignment) -> shiftAssignment.getSpot().getName())
+                        .collect(Collectors.joining(",")));
+            });
+            
             writeGridSheet("Spot roster", new String[]{"Name"}, roster.getSpotList(), (Row row, Spot spot) -> {
                 row.createCell(0).setCellValue(spot.getName());
             }, (Cell cell, Pair<Spot, TimeSlot> pair) -> {
@@ -379,23 +397,7 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                 }
                 cell.setCellValue(employee.getName());
             });
-            writeGridSheet("Employee roster", new String[]{"Name"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
-                row.createCell(0).setCellValue(employee.getName());
-            }, (Cell cell, Pair<Employee, TimeSlot> pair) -> {
-                Employee employee = pair.getKey();
-                TimeSlot timeSlot = pair.getValue();
-                if (employee.getUnavailableTimeSlotSet().contains(timeSlot)) {
-                    cell.setCellStyle(unavailableStyle);
-                }
-                List<ShiftAssignment> shiftAssignmentList = employeeMap.get(pair);
-                if (shiftAssignmentList == null) {
-                    cell.setCellValue(" "); // TODO HACK to get a clearer xlsx file
-                    return;
-                }
-                cell.setCellValue(shiftAssignmentList.stream()
-                        .map((shiftAssignment) -> shiftAssignment.getSpot().getName())
-                        .collect(Collectors.joining(",")));
-            });
+            
             writeListSheet("Employees", new String[]{"Name", "Skills"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
                 row.createCell(0).setCellValue(employee.getName());
                 row.createCell(1).setCellValue(employee.getSkillSet().stream()

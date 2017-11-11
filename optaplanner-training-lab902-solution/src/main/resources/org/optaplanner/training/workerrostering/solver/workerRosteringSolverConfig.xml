@@ -13,16 +13,16 @@
     <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     <!-- Speedup that can be applied to most, but not all use cases: -->
   </constructionHeuristic>
-
+    
   <termination>
-    <secondsSpentLimit>360</secondsSpentLimit>
+    <secondsSpentLimit>250</secondsSpentLimit>
   </termination>
   <localSearch>
     <acceptor>
       <entityTabuSize>7</entityTabuSize>
     </acceptor>
     <forager>
-      <acceptedCountLimit>1000</acceptedCountLimit>
+      <acceptedCountLimit>1500</acceptedCountLimit>
     </forager>
   </localSearch>
 

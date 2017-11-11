@@ -54,8 +54,13 @@ public class Employee {
     
     public String getSkillName(){
         Iterator<Skill> iter = skillSet.iterator();
-        Skill k = iter.next();
-        return k.getName();
+        String skillConcat = "";
+        while (iter.hasNext()) {
+            Skill k = iter.next();
+            skillConcat += k.getName();
+        }
+        
+        return skillConcat;
     }
 
 }
