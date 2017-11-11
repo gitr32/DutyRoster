@@ -127,8 +127,10 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                 timeSlot.setTimeSlotState(TimeSlotState.valueOf(row.getCell(2).getStringCellValue()));
                 return timeSlot;
             });
-            List<Employee> employeeList = readListSheet("Employees", new String[]{"Name", "Skills"}, (Row row) -> {
+            List<Employee> employeeList = readListSheet("Employees", new String[]{"Name", "Skills", "isReserve"}, (Row row) -> {
                 String name = row.getCell(0).getStringCellValue();
+                boolean isReserve = row.getCell(2).getBooleanCellValue();
+
                 Set<Skill> skillSet = Arrays.stream(row.getCell(1).getStringCellValue().split(",")).map((skillName) -> {
                     Skill skill = skillMap.get(skillName);
                     if (skill == null) {
@@ -137,7 +139,7 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                     }
                     return skill;
                 }).collect(Collectors.toSet());
-                Employee employee = new Employee(name, skillSet);
+                Employee employee = new Employee(name, skillSet, isReserve);
                 employee.setUnavailableTimeSlotSet(new LinkedHashSet<>());
                 return employee;
             });
@@ -398,10 +400,11 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                 cell.setCellValue(employee.getName());
             });
             
-            writeListSheet("Employees", new String[]{"Name", "Skills"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
+            writeListSheet("Employees", new String[]{"Name", "Skills", "isReserve"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
                 row.createCell(0).setCellValue(employee.getName());
                 row.createCell(1).setCellValue(employee.getSkillSet().stream()
                         .map(Skill::getName).collect(Collectors.joining(",")));
+                row.createCell(2).setCellValue(employee.getIsReserve());
             });
             writeListSheet("Timeslots", new String[]{"Start", "End", "State"}, roster.getTimeSlotList(), (Row row, TimeSlot timeSlot) -> {
                 row.createCell(0).setCellValue(timeSlot.getStartDateTime().format(DATE_TIME_FORMATTER));

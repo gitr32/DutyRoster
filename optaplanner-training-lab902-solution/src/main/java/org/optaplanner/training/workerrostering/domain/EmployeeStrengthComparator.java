@@ -13,10 +13,9 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  *
  * @author r128
  */
-public class ShiftAssignmentStrengthComparator implements Comparator<ShiftAssignment>, Serializable {
-    public int compare(ShiftAssignment a, ShiftAssignment b) {
+public class EmployeeStrengthComparator implements Comparator<Employee>, Serializable {
+    public int compare(Employee a, Employee b) {
         return new CompareToBuilder()
-                .append(a.getEmployee(), b.getEmployee())
                 .toComparison();
     }
 }

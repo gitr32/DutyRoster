@@ -28,7 +28,7 @@ public class ShiftAssignment {
 
     private boolean lockedByUser = false;
 
-    @PlanningVariable(valueRangeProviderRefs = "employeeRange")
+    @PlanningVariable(valueRangeProviderRefs = "employeeRange", strengthComparatorClass = EmployeeStrengthComparator.class)
     private Employee employee = null;
 
     private ShiftAssignment() {

@@ -139,7 +139,6 @@ public class WorkerRosteringGenerator {
             } else {
                 timeSlot.setTimeSlotState(TimeSlotState.DRAFT);
             }
-            System.out.println(startDateTime);
             timeSlotList.add(timeSlot);
             previousEndDateTime = endDateTime;
         }
@@ -174,7 +173,7 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet);
+            Employee employee = new Employee(name, skillSet, false);
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -192,7 +191,7 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet);
+            Employee employee = new Employee(name, skillSet, false);
 //            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -210,13 +209,72 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet);
+            Employee employee = new Employee(name, skillSet, false);
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             Iterator<TimeSlot> timeslotIter = unavailableTimeSlotSet.iterator();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
             employeeList.add(employee);
         }
+        
+        /***************SETTING RESERVE EMPLOYEES***************************/
+        
+        for (int i = 0; i < 40; i++) {
+            String name = employeeNameGenerator.generateNextValue();
+            //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
+            LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
+            skillSet.add(new Skill("Malay"));
+            if (rand.nextDouble() <= 0.7) {
+                skillSet.add(new Skill("mSearch"));
+            } else {
+                skillSet.add(new Skill("fSearch"));
+            }
+            Employee employee = new Employee(name, skillSet, true);
+            //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
+            employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
+            employeeList.add(employee);
+        }
+        
+        //tamil
+        for (int i = 0; i < 24; i++) {
+            String name = employeeNameGenerator.generateNextValue();
+            //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
+            LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
+            skillSet.add(new Skill("Tamil"));
+            if (rand.nextDouble() <= 0.7) {
+                skillSet.add(new Skill("mSearch"));
+            } else {
+                skillSet.add(new Skill("fSearch"));
+            }
+            Employee employee = new Employee(name, skillSet, true);
+//            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
+            employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
+            employeeList.add(employee);
+        }
+        
+        //mandarin
+        for (int i = 0; i < 208; i++) {
+            String name = employeeNameGenerator.generateNextValue();
+            //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
+            LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
+            skillSet.add(new Skill("Mandarin"));
+            if (rand.nextDouble() <= 0.7) {
+                skillSet.add(new Skill("mSearch"));
+            } else {
+                skillSet.add(new Skill("fSearch"));
+            }
+            Employee employee = new Employee(name, skillSet, true);
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
+            //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
+            Iterator<TimeSlot> timeslotIter = unavailableTimeSlotSet.iterator();
+            employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
+            employeeList.add(employee);
+        }
+        
+        
+        
         return employeeList;
     }
     
