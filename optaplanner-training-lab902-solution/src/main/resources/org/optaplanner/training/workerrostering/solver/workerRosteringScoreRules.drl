@@ -62,9 +62,10 @@ rule "At most one shift assignment per day per employee"
                 $leftDay : getTimeSlot().getStartDateTime().toLocalDate())
         ShiftAssignment(
                 employee == $e,
-                getTimeSlot().getStartDateTime().toLocalDate() == $leftDay)
+                getTimeSlot().getStartDateTime().toLocalDate() == $leftDay,
+                this != $s)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -120);
+        scoreHolder.addHardConstraintMatch(kcontext, -180);
 end
 
 rule "No 2 shifts within 12 hours from each other"
@@ -99,7 +100,7 @@ rule "Get a 48 hours rest every 2 days"
                 $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 36
             )
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -60);
+        scoreHolder.addHardConstraintMatch(kcontext, -90);
 end
 
 rule "Is not a reserve"
@@ -126,10 +127,10 @@ rule "Should work 2 consecutive days worth of shift"
         $s2 : ShiftAssignment(
                 $e == employee,
                 $firstEnd < getTimeSlot().getEndDateTime(),
-                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 24)
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12)
                 
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 45);
+        scoreHolder.addHardConstraintMatch(kcontext, 50);
 end
 
 rule "Should be working in the same shift"
@@ -146,10 +147,9 @@ rule "Should be working in the same shift"
                 employee == $e,
                 $firstEnd < getTimeSlot().getEndDateTime(),
                 $firstShiftHour == getTimeSlot().getStartDateTime().getHour(),
-                $firstDay != getTimeSlot().getStartDateTime().toLocalDate())
-        ShiftAssignment(this == $s2)
+                $firstDay < getTimeSlot().getStartDateTime().toLocalDate())
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 25);
+        scoreHolder.addHardConstraintMatch(kcontext, 45);
 end
 
 // ############################################################################
@@ -184,6 +184,6 @@ rule "Affinity: assign an employee to the same spot as much as possible"
     then
         // Fairness and load balancing trick (see docs): squared to assure correctness in corner cases
         // Positive to anti-balance it across spot-employee pairs
-        scoreHolder.addHardConstraintMatch(kcontext, $total*4);
+        scoreHolder.addHardConstraintMatch(kcontext, $total*10);
 end
 */
