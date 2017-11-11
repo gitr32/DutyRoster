@@ -88,23 +88,18 @@ rule "Get a 48 hours rest every 2 days"
                 $e : employee,
                 $firstEnd : getTimeSlot().getEndDateTime())
         $s2 : ShiftAssignment(
-                employee != null,
                 employee == $e,
                 $firstEnd <= getTimeSlot().getEndDateTime(),
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12,
                 $secondEnd : getTimeSlot().getEndDateTime())
         $s3: ShiftAssignment(
-                employee != null,
                 employee == $e,
                 $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12 ||
                 $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 24 ||
-                $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 36,
-                this != $s1,
-                this != $s2
+                $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 36
             )
-        ShiftAssignment(this == $s3)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, -60);
 end
 
 rule "Is not a reserve"
@@ -134,7 +129,7 @@ rule "Should work 2 consecutive days worth of shift"
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 24)
                 
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, 45);
 end
 
 rule "Should be working in the same shift"
@@ -154,7 +149,7 @@ rule "Should be working in the same shift"
                 $firstDay != getTimeSlot().getStartDateTime().toLocalDate())
         ShiftAssignment(this == $s2)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, 25);
 end
 
 // ############################################################################
@@ -189,6 +184,6 @@ rule "Affinity: assign an employee to the same spot as much as possible"
     then
         // Fairness and load balancing trick (see docs): squared to assure correctness in corner cases
         // Positive to anti-balance it across spot-employee pairs
-        scoreHolder.addSoftConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, $total*4);
 end
 */
