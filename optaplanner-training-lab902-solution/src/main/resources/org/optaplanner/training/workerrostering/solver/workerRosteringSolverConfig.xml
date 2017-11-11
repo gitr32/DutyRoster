@@ -15,15 +15,15 @@
   </constructionHeuristic>
     
   <termination>
-    <secondsSpentLimit>250</secondsSpentLimit>
+    <secondsSpentLimit>150</secondsSpentLimit>
   </termination>
-  <localSearch>
+<!--  <localSearch>
     <acceptor>
       <entityTabuSize>7</entityTabuSize>
     </acceptor>
     <forager>
       <acceptedCountLimit>1500</acceptedCountLimit>
     </forager>
-  </localSearch>
+  </localSearch>-->
 
 </solver>
