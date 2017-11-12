@@ -9,11 +9,11 @@
     <scoreDrl>org/optaplanner/training/workerrostering/solver/workerRosteringScoreRules.drl</scoreDrl>
   </scoreDirectorFactory>
   
-<!--  <constructionHeuristic>
-    <constructionHeuristicType>STRONGEST_FIT</constructionHeuristicType>
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
      Speedup that can be applied to most, but not all use cases: 
   </constructionHeuristic>
-    -->
+    
   <termination>
     <secondsSpentLimit>120</secondsSpentLimit>
   </termination>
