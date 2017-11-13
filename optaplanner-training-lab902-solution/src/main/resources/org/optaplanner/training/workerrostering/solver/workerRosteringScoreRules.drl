@@ -46,7 +46,7 @@ rule "No multiple spot assignment for same shift"
                 $leftEndDateTime == getTimeSlot().getEndDateTime(),
                 $leftShiftHour == getTimeSlot().getStartDateTime().getHour())
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -270);
+        scoreHolder.addHardConstraintMatch(kcontext, -399);
 end
 
 rule "At most 1 full day shift assignment per day per employee"
@@ -64,7 +64,7 @@ rule "At most 1 full day shift assignment per day per employee"
                 employee == $e,
                 $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -200);
+        scoreHolder.addHardConstraintMatch(kcontext, -300);
 end
 
 rule "No consecutive Shifts"
@@ -87,34 +87,23 @@ rule "No consecutive Shifts"
         scoreHolder.addHardConstraintMatch(kcontext, 131);
 end
 
-rule "Shifts should be abide by shift schedule (8AM)"
-    when
-        $s1 : ShiftAssignment (
-            employee != null,
-            $e : employee,
-            $leftDay: getTimeSlot().getStartDateTime().toLocalDate(),
-            $firstEnd: getTimeSlot().getEndDateTime()
-            )
-        $s2 : ShiftAssignment (
-            employee == $e,
-            $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0)
-    then
-        scoreHolder.addHardConstraintMatch(kcontext, 130);
-end
-
-rule "Shifts should be in shift schedule (8PM)"
+rule "Shifts should be abide by shift schedule cycle"
     when
         $s1 : ShiftAssignment (
             employee != null,
             $e : employee,
             $leftDay: getTimeSlot().getStartDateTime().toLocalDate(),
             $firstEnd: getTimeSlot().getEndDateTime(),
-            getTimeSlot().getStartDateTime().getHour() == 20)
+            getTimeSlot().getStartDateTime().getHour() == 20 ||
+            getTimeSlot().getStartDateTime().getHour() == 8
+            )
         $s2 : ShiftAssignment (
+            employee != null,
             employee == $e,
-            $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0)
+            $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
+            !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 130);
+        scoreHolder.addHardConstraintMatch(kcontext, 77);
 end
 
 rule "Both spots for the same shift should be the same"
@@ -127,11 +116,13 @@ rule "Both spots for the same shift should be the same"
                 $firstSpotName: getSpot().getName(),
                 $firstEnd: getTimeSlot().getEndDateTime())
         ShiftAssignment(
+                employee != null,
                 employee == $e,
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
-                $firstSpotName.equals(getSpot().getName()))
+                $firstSpotName.equals(getSpot().getName()),
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 125);
+        scoreHolder.addHardConstraintMatch(kcontext, 91);
 end
 
 rule "Both spots for the same shift are not the same"
@@ -144,6 +135,7 @@ rule "Both spots for the same shift are not the same"
                 $firstSpotName: getSpot().getName(),
                 $firstEnd: getTimeSlot().getEndDateTime())
         ShiftAssignment(
+                employee != null,
                 employee == $e,
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
                 !$firstSpotName.equals(getSpot().getName()))
@@ -161,9 +153,11 @@ rule "Should work consecutive shifts (1 day, 1 night)"
                 $firstEnd: getTimeSlot().getEndDateTime()
               )
         $s2 : ShiftAssignment(
+                employee != null,
                 employee == $e,
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
-                $secondEnd: getTimeSlot().getEndDateTime()
+                $secondEnd: getTimeSlot().getEndDateTime(),
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot())
               )
         $s3 : ShiftAssignment(
                 employee == $e,
@@ -233,11 +227,6 @@ rule "Reserves who have worked before should will be lesser prioritised"
                 getTimeSlot().getEndDateTime().until($firstStart, ChronoUnit.HOURS) == 0,
                 $secondEnd: getTimeSlot().getEndDateTime()
               )
-        $s3 : ShiftAssignment(
-                employee == $e,
-                $secondEnd < getTimeSlot().getEndDateTime(),
-                $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0 
-              )
     then
         scoreHolder.addHardConstraintMatch(kcontext, -322);
 end
@@ -246,7 +235,7 @@ rule "Is not a reserve"
     when 
         $s1 : ShiftAssignment(employee != null, !employee.getIsReserve())
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 89);
+        scoreHolder.addHardConstraintMatch(kcontext, 39);
 end
 
 rule "Unavailable only for the first Slot"
@@ -261,25 +250,7 @@ rule "Unavailable only for the first Slot"
                 $firstTimeSlot: getTimeSlot(),
                 getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -333);
-end
-
-rule "Unavailable only for the second Slot"
-    when
-        $s1 : ShiftAssignment(
-                employee != null,
-                $e : employee,
-                getTimeSlot().getStartDateTime().getHour() == 2 ||
-                getTimeSlot().getStartDateTime().getHour() == 14,
-                $firstStart: getTimeSlot().getStartDateTime(),
-                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
-        $s2 : ShiftAssignment(
-                employee != null,
-                employee == $e,
-                getTimeSlot().getEndDateTime().until($firstStart, ChronoUnit.HOURS) == 0,
-                getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
-    then
-        scoreHolder.addHardConstraintMatch(kcontext, -333);
+        scoreHolder.addHardConstraintMatch(kcontext, -99);
 end
 
 rule "Unavailable time slots for an employee"
@@ -300,10 +271,10 @@ rule "Unavailable time slots for an employee"
                 getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()) ||
                 getEmployee().getUnavailableTimeSlotSet().contains($firstTimeSlot))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -133);
+        scoreHolder.addHardConstraintMatch(kcontext, -103);
 end
 
-rule "Employee is available"
+rule "Employee is available for both slots"
     when
         $s1 : ShiftAssignment(
                 employee != null,
@@ -312,14 +283,13 @@ rule "Employee is available"
                 getTimeSlot().getStartDateTime().getHour() == 20,
                 $spotName: getSpot().getName(),
                 $firstEnd: getTimeSlot().getEndDateTime(),
-                $firstTimeSlot: getTimeSlot())
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
         $s2 : ShiftAssignment (
                 employee != null,
                 employee == $e,
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
                 $spotName.equals(getSpot().getName),
-                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()) &&
-                !getEmployee().getUnavailableTimeSlotSet().contains($firstTimeSlot))
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 133);
+        scoreHolder.addHardConstraintMatch(kcontext, 103);
 end

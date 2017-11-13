@@ -240,7 +240,7 @@ public class WorkerRosteringGenerator {
         
         /***************SETTING RESERVE EMPLOYEES***************************/
         
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 90; i++) {
             String name = employeeNameGenerator.generateNextValue();
             //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
             LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
@@ -265,7 +265,7 @@ public class WorkerRosteringGenerator {
         }
         
         //tamil
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < 90; i++) {
             String name = employeeNameGenerator.generateNextValue();
             //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
             LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
@@ -290,7 +290,7 @@ public class WorkerRosteringGenerator {
         }
         
         //mandarin
-        for (int i = 0; i < 208; i++) {
+        for (int i = 0; i < 300; i++) {
             String name = employeeNameGenerator.generateNextValue();
             //LinkedHashSet<Skill> skillSet = new LinkedHashSet<>(extractRandomSubList(generalSkillList, 1.0));
             LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
