@@ -51,6 +51,7 @@ import org.optaplanner.training.workerrostering.domain.Employee;
 import org.optaplanner.training.workerrostering.domain.Roster;
 import org.optaplanner.training.workerrostering.domain.RosterParametrization;
 import org.optaplanner.training.workerrostering.domain.ShiftAssignment;
+import org.optaplanner.training.workerrostering.domain.ShiftAssignmentDateComparator;
 import org.optaplanner.training.workerrostering.domain.Skill;
 import org.optaplanner.training.workerrostering.domain.Spot;
 import org.optaplanner.training.workerrostering.domain.TimeSlot;
@@ -196,6 +197,12 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                 }
                 return null;
             });
+            
+            
+            ShiftAssignmentDateComparator shiftDateComparator = new ShiftAssignmentDateComparator();
+            shiftAssignmentList.sort(shiftDateComparator);
+            
+            
             return new Roster(rosterParametrization,
                     skillList, spotList, timeSlotList, employeeList,
                     shiftAssignmentList);

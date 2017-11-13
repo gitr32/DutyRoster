@@ -10,11 +10,11 @@
   </scoreDirectorFactory>
   
   <constructionHeuristic>
-    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
   </constructionHeuristic>
     
   <termination>
-    <secondsSpentLimit>120</secondsSpentLimit>
+    <secondsSpentLimit>250</secondsSpentLimit>
   </termination>
 <!--  <localSearch>
     <acceptor>
