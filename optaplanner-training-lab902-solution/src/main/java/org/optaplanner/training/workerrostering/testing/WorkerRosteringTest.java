@@ -33,7 +33,8 @@ public class WorkerRosteringTest {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         
         //String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113201119.xlsx";
-        String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113214315.xlsx";
+        //String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113214315.xlsx";
+        String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113233601.xlsx";
         
         String[] skills = {"Malay", "Tamil", "Mandain"};
         ArrayList<String> currentWorkers = new ArrayList<>();
@@ -107,7 +108,7 @@ public class WorkerRosteringTest {
                 
                 
                
-                System.out.println(workerSplit[0]);
+                //System.out.println(workerSplit[0]);
                 int dayCounter = 0;
                 for(int i = 0; i < status_arr.length -1; i++){
                     String work = status_arr[i];
@@ -133,8 +134,7 @@ public class WorkerRosteringTest {
                 for(int statusCount =1; statusCount < status_arr.length - 1; statusCount++){
                     String work_status = status_arr[statusCount];
                     //System.out.println(work_status);
-                    String upcoming_status = status_arr[statusCount];
-
+                    
                     //FIRST CHECK ERROR - 2 Work back to back
                     if(currentStatus.equals("1") && work_status.equals("1")){
                         checker++;
@@ -143,26 +143,31 @@ public class WorkerRosteringTest {
                         currentStatus = work_status;
                     }
                     
-                    //CHECK FOR BACK TO BACK SHIFTS
-                    if(currentStatus.equals("1") && work_status.equals("0") && upcoming_status.equals("1")){
-                        consecutive = 1;
-                    }
-                    if(consecutive == 1){
-                        for(int i = 0; i < 5; i++){
-                            if(statusCount+2+i < status_arr.length){
-                                if(status_arr[statusCount+2].equals("0")){
-                                    checker2++;
+                    if( (statusCount+2) < status_arr.length){
+                        String upcoming_status = status_arr[statusCount+1];
+                        String upcoming_status1 = status_arr[statusCount+2];
+                    
+                        //CHECK FOR BACK TO BACK SHIFTS
+                        if(currentStatus.equals("1") && work_status.equals("0") && upcoming_status.equals("0") && upcoming_status1.equals(("1")) ){
+                            consecutive = 1;
+                        }
+                        if(consecutive == 1){
+                            for(int i = 0; i < 4; i++){
+                                if(statusCount+2+i < status_arr.length){
+                                    if(status_arr[statusCount+2].equals("0")){
+                                        checker2++;
+                                    }
                                 }
-                            }
-                        }   
+                            }   
+                        }
                     }
                 } 
             }
            
             
             System.out.println("BACK BACK SHIFT ERRORS " + checker);
-            System.out.println("CONSECUTIVE WORK BUT NO 5 DAYS REST - ERRORS " + checker2);
-            
+            System.out.println("CONSECUTIVE WORK BUT NO 2 DAYS REST - ERRORS " + checker2);
+            System.out.println();
             
             
             ArrayList<String> workerList = new ArrayList<String>();
@@ -192,7 +197,7 @@ public class WorkerRosteringTest {
                 
                 while (it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
-                    System.out.println(pair.getKey() + " = " + pair.getValue());
+                    //System.out.println(pair.getKey() + " = " + pair.getValue());
                     
                     String value = ""+pair.getValue();
                     String[] valuearr = value.split(",");
@@ -200,6 +205,8 @@ public class WorkerRosteringTest {
                     int chineseCheck = 0;
                     int malayCheck = 0;
                     int tamilCheck = 0;
+                    int femaleCheck = 0;
+                    int maleCheck = 0;
                     for (int counter = 2; counter < workerList.size(); counter++) { 
                         //System.out.println(workerList.get(counter));
                         String worker = workerList.get(counter);
@@ -208,6 +215,12 @@ public class WorkerRosteringTest {
                             //System.out.println(shiftWorker);
 
                             if(worker.indexOf(shiftWorker) != -1){
+                                if(worker.indexOf("mSearch") != -1){
+                                    maleCheck++;
+                                }
+                                if(worker.indexOf("fSearch") != -1){
+                                    femaleCheck++;
+                                }
                                 if(worker.indexOf("Malay") != -1){
                                     malayCheck++;
                                 }
@@ -220,7 +233,13 @@ public class WorkerRosteringTest {
                             }
                         }
                     }
-                    System.out.println(pair.getKey() + " = CHINESE - " + chineseCheck + " MALAY - " + malayCheck + " TAMIL - " + tamilCheck );
+                    
+                    int total = femaleCheck+maleCheck;
+                    double femalepercent = femaleCheck * 1.0 / total * 100;
+                    double malepercent = maleCheck * 1.0 / total * 100;
+                    System.out.println("Day " + pair.getKey() + " = CHINESE - " + chineseCheck + " MALAY - " + malayCheck + " TAMIL - " + tamilCheck );
+                    System.out.println("Day " + pair.getKey() + " = MALE - " + maleCheck + " FEMALE - " + femaleCheck );
+                    System.out.println("Day " + pair.getKey() + " = RATIO - " + malepercent  + " : " + femalepercent );
                     it.remove(); // avoids a ConcurrentModificationException
                 }
                 
