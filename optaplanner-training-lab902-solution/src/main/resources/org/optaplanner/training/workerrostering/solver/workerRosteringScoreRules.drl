@@ -134,6 +134,23 @@ rule "Both spots for the same shift should be the same"
         scoreHolder.addHardConstraintMatch(kcontext, 125);
 end
 
+rule "Both spots for the same shift are not the same"
+    when
+        $s : ShiftAssignment(
+                employee != null,
+                $e : employee,
+                getTimeSlot().getStartDateTime().getHour() == 8 ||
+                getTimeSlot().getStartDateTime().getHour() == 20,
+                $firstSpotName: getSpot().getName(),
+                $firstEnd: getTimeSlot().getEndDateTime())
+        ShiftAssignment(
+                employee == $e,
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
+                !$firstSpotName.equals(getSpot().getName()))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -235);
+end
+
 rule "Should work consecutive shifts (1 day, 1 night)"
     when
         $s1 : ShiftAssignment(
@@ -230,4 +247,79 @@ rule "Is not a reserve"
         $s1 : ShiftAssignment(employee != null, !employee.getIsReserve())
     then
         scoreHolder.addHardConstraintMatch(kcontext, 89);
+end
+
+rule "Unavailable only for the first Slot"
+    when
+        $s1 : ShiftAssignment(
+                employee != null,
+                $e : employee,
+                getTimeSlot().getStartDateTime().getHour() == 8 ||
+                getTimeSlot().getStartDateTime().getHour() == 20,
+                $spotName: getSpot().getName(),
+                $firstEnd: getTimeSlot().getEndDateTime(),
+                $firstTimeSlot: getTimeSlot(),
+                getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -333);
+end
+
+rule "Unavailable only for the second Slot"
+    when
+        $s1 : ShiftAssignment(
+                employee != null,
+                $e : employee,
+                getTimeSlot().getStartDateTime().getHour() == 2 ||
+                getTimeSlot().getStartDateTime().getHour() == 14,
+                $firstStart: getTimeSlot().getStartDateTime(),
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
+        $s2 : ShiftAssignment(
+                employee != null,
+                employee == $e,
+                getTimeSlot().getEndDateTime().until($firstStart, ChronoUnit.HOURS) == 0,
+                getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -333);
+end
+
+rule "Unavailable time slots for an employee"
+    when
+        $s1 : ShiftAssignment(
+                employee != null,
+                $e : employee,
+                getTimeSlot().getStartDateTime().getHour() == 8 ||
+                getTimeSlot().getStartDateTime().getHour() == 20,
+                $spotName: getSpot().getName(),
+                $firstEnd: getTimeSlot().getEndDateTime(),
+                $firstTimeSlot: getTimeSlot())
+        $s2 : ShiftAssignment (
+                employee != null,
+                employee == $e,
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
+                $spotName.equals(getSpot().getName),
+                getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()) ||
+                getEmployee().getUnavailableTimeSlotSet().contains($firstTimeSlot))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -133);
+end
+
+rule "Employee is available"
+    when
+        $s1 : ShiftAssignment(
+                employee != null,
+                $e : employee,
+                getTimeSlot().getStartDateTime().getHour() == 8 ||
+                getTimeSlot().getStartDateTime().getHour() == 20,
+                $spotName: getSpot().getName(),
+                $firstEnd: getTimeSlot().getEndDateTime(),
+                $firstTimeSlot: getTimeSlot())
+        $s2 : ShiftAssignment (
+                employee != null,
+                employee == $e,
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
+                $spotName.equals(getSpot().getName),
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()) &&
+                !getEmployee().getUnavailableTimeSlotSet().contains($firstTimeSlot))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, 133);
 end
