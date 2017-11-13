@@ -128,7 +128,7 @@ public class WorkerRosteringGenerator {
         LocalDateTime previousEndDateTime = LocalDateTime.of(2017, 11, 1, 8, 0);
         for (int i = 0; i < size; i++) {
             LocalDateTime startDateTime = previousEndDateTime;
-            LocalDateTime endDateTime = startDateTime.plusHours(12);
+            LocalDateTime endDateTime = startDateTime.plusHours(6);
             TimeSlot timeSlot = new TimeSlot(startDateTime, endDateTime);
             if (continuousPlanning && i < size / 2) {
                 if (i < size / 4) {

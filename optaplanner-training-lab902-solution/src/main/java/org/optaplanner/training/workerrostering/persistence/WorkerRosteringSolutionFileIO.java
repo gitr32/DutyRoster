@@ -467,7 +467,7 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                     Cell cell = higherHeaderRow.createCell(columnNumber);
                     cell.setCellValue(timeSlot.getStartDateTime().toLocalDate().format(DAY_FORMATTER));
                     cell.setCellStyle(headerStyle);
-                    sheet.addMergedRegion(new CellRangeAddress(0, 0, columnNumber, columnNumber + 1));
+                    sheet.addMergedRegion(new CellRangeAddress(0, 0, columnNumber, columnNumber + 3));
                 }
                 Cell cell = lowerHeaderRow.createCell(columnNumber);
                 cell.setCellValue(timeSlot.getStartDateTime().toLocalTime().format(TIME_FORMATTER));
