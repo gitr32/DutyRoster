@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+  <!--<environmentMode>FAST_ASSERT</environmentMode>-->
+  <scanAnnotatedClasses>
+      <packageInclude>org.optaplanner.training.workerrostering</packageInclude>
+  </scanAnnotatedClasses>
+  
+  <scoreDirectorFactory>
+    <scoreDrl>org/optaplanner/training/workerrostering/solver/workerRosteringScoreRules.drl</scoreDrl>
+  </scoreDirectorFactory>
+  
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+  </constructionHeuristic>
+    
+  <termination>
+    <secondsSpentLimit>250</secondsSpentLimit>
+  </termination>
+<!--  <localSearch>
+    <acceptor>
+      <entityTabuSize>7<-/entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1500</acceptedCountLimit>
+    </forager>
+  </localSearch>-->
+
+</solver>
