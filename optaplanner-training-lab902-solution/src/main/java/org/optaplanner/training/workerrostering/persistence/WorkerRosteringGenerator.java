@@ -174,8 +174,8 @@ public class WorkerRosteringGenerator {
                 skillSet.add(new Skill("fSearch"));
             }
             Employee employee = new Employee(name, skillSet, false);
-            //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
-            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.5));
+            //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
             employeeList.add(employee);
         }

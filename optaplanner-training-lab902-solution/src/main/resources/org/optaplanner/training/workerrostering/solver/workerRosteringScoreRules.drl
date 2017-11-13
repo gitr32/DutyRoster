@@ -92,60 +92,74 @@ rule "Unavailable time slots for an employee"
                 employee != null,
                 getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, -171);
 end
+
+rule "Employee is available"
+    when
+        ShiftAssignment(
+                employee != null,
+                !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, 127);
+end
+
+rule "Is a reserve"
+    when 
+        $s1 : ShiftAssignment(employee != null, !employee.getIsReserve())
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -50);
+end
+
 
 rule "Is not a reserve"
     when 
         $s1 : ShiftAssignment(employee != null, !employee.getIsReserve())
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 35);
+        scoreHolder.addHardConstraintMatch(kcontext, 50);
 end
 
 // ############################################################################
 // Hard constraints (Positive)
 // ############################################################################
-
-rule "Should work 2 consecutive days worth of shift (forward)"
+rule "Should not have a standalone shift"
     when
         $s1 : ShiftAssignment(
                 employee != null,
                 $e : employee,
-                $firstEnd : getTimeSlot().getEndDateTime(),
-                $firstStart : getTimeSlot().getStartDateTime())
+                $firstStart: getTimeSlot().getStartDateTime(),
+                $firstEnd: getTimeSlot().getEndDateTime()
+              )
         $s2 : ShiftAssignment(
-                $firstEnd < getTimeSlot().getStartDateTime(),
-                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12,
-                $e == employee,
-                $secondEnd: getTimeSlot().getEndDateTime())
+                employee != $e,
+                $firstEnd <  getTimeSlot().getStartDateTime(),
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12
+              )
         $s3 : ShiftAssignment(
-                $secondEnd < getTimeSlot().getStartDateTime(),
-                $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12,
-                $e != employee)
-
+                employee != $e,
+                $firstStart >  getTimeSlot().getEndDateTime(),
+                getTimeSlot().getEndDateTime().until($firstStart, ChronoUnit.HOURS) == 12
+              )
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, -53);
 end
 
-rule "Should work 2 consecutive days worth of shift (backward)"
+
+rule "Should work consecutive shifts (2 days)"
     when
         $s1 : ShiftAssignment(
                 employee != null,
                 $e : employee,
-                $firstEnd : getTimeSlot().getEndDateTime(),
-                $firstStart : getTimeSlot().getStartDateTime())
+                $firstStart: getTimeSlot().getStartDateTime(),
+                $firstEnd: getTimeSlot().getEndDateTime()
+              )
         $s2 : ShiftAssignment(
-                $firstStart > getTimeSlot().getEndDateTime(),
-                getTimeSlot().getEndDateTime().until($firstStart, ChronoUnit.HOURS) == 12,
-                $e == employee,
-                $secondStart: getTimeSlot().getStartDateTime())
-        $s3 : ShiftAssignment(
-                $secondStart > getTimeSlot().getEndDateTime(),
-                getTimeSlot().getEndDateTime().until($secondStart, ChronoUnit.HOURS) == 12,
-                $e != employee)
-        
+                employee == $e,
+                $firstEnd <  getTimeSlot().getStartDateTime(),
+                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12
+              )
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 0);
+        scoreHolder.addHardConstraintMatch(kcontext, 21);
 end
 
 rule "Should not be working after 2 consecutive shifts (forward)"
