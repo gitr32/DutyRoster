@@ -24,13 +24,15 @@ public class Employee {
     private final String name;
     private final Set<Skill> skillSet;
     private final boolean isReserve;
+    private final String shiftType;
 
     private Set<TimeSlot> unavailableTimeSlotSet;
 
-    public Employee(String name, Set<Skill> skillSet, boolean isReserve) {
+    public Employee(String name, Set<Skill> skillSet, boolean isReserve, String shiftType) {
         this.name = name;
         this.skillSet = skillSet;
         this.isReserve = isReserve;
+        this.shiftType = shiftType;
     }
 
     public String getName() {
@@ -49,6 +51,10 @@ public class Employee {
         return isReserve;
     }
 
+    public String getShiftType () {
+        return shiftType;
+    }
+    
     public void setUnavailableTimeSlotSet(Set<TimeSlot> unavailableTimeSlotSet) {
         this.unavailableTimeSlotSet = unavailableTimeSlotSet;
     }
