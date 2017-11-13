@@ -231,8 +231,8 @@ public class WorkerRosteringGenerator {
             }
             
             Employee employee = new Employee(name, skillSet, false, shiftType);
-            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
-//            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
+//            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             Iterator<TimeSlot> timeslotIter = unavailableTimeSlotSet.iterator();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
             employeeList.add(employee);
