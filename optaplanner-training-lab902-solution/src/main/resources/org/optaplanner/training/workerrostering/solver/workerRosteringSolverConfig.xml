@@ -14,7 +14,7 @@
   </constructionHeuristic>
     
   <termination>
-    <secondsSpentLimit>150</secondsSpentLimit>
+    <secondsSpentLimit>30</secondsSpentLimit>
   </termination>
 <!--  <localSearch>
     <acceptor>

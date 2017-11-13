@@ -122,7 +122,7 @@ rule "Both spots for the same shift should be the same"
                 $firstSpotName.equals(getSpot().getName()),
                 !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 91);
+        scoreHolder.addHardConstraintMatch(kcontext, 39);
 end
 
 rule "Both spots for the same shift are not the same"
@@ -140,7 +140,7 @@ rule "Both spots for the same shift are not the same"
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 0,
                 !$firstSpotName.equals(getSpot().getName()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -235);
+        scoreHolder.addHardConstraintMatch(kcontext, -109);
 end
 
 rule "Should work consecutive shifts (1 day, 1 night)"

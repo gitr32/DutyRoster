@@ -85,7 +85,7 @@ public class WorkerRosteringGenerator {
     public Roster generateRoster(int spotListSize, int timeSlotListSize, boolean continuousPlanning) {
         int employeeListSize = 136;
         int skillListSize =  6;
-        timeSlotListSize = getNumberOfDaysForAMonth(10)*2;
+        timeSlotListSize = getNumberOfDaysForAMonth(14)*4;
         RosterParametrization rosterParametrization = new RosterParametrization();
         List<Skill> skillList = createSkillList(skillListSize);
         List<Spot> spotList = createSpotList(spotListSize, skillList);
