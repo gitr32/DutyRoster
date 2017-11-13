@@ -34,9 +34,10 @@ public class WorkerRosteringTest {
         
         //String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113201119.xlsx";
         //String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113214315.xlsx";
-        String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113233601.xlsx";
+        //String FILE_NAME = "/Users/ben/Downloads/roster-34spots-14days-solved20171113233601.xlsx";
+        String FILE_NAME =  "/Users/ben/Downloads/roster-34spots-14days-solved20171114034000.xlsx";
         
-        String[] skills = {"Malay", "Tamil", "Mandain"};
+
         ArrayList<String> currentWorkers = new ArrayList<>();
         HashMap<String, String> schedule = new HashMap<>();
         
@@ -136,25 +137,38 @@ public class WorkerRosteringTest {
                     //System.out.println(work_status);
                     
                     //FIRST CHECK ERROR - 2 Work back to back
-                    if(currentStatus.equals("1") && work_status.equals("1")){
-                        checker++;
-                        currentStatus = work_status;
-                    }else {
-                        currentStatus = work_status;
-                    }
-                    
                     if( (statusCount+2) < status_arr.length){
                         String upcoming_status = status_arr[statusCount+1];
                         String upcoming_status1 = status_arr[statusCount+2];
+
+                    
+                        if(currentStatus.equals("1") && work_status.equals("1") && upcoming_status.equals("1")  && upcoming_status1.equals("1") ){
+                            checker++;
+                            currentStatus = work_status;
+                        }else {
+                            currentStatus = work_status;
+                        }
+                    }
+                    
+                    if( (statusCount+5) < status_arr.length){
+                        String upcoming_status = status_arr[statusCount+1];
+                        String upcoming_status1 = status_arr[statusCount+2];
+                        String upcoming_status2 = status_arr[statusCount+3];
+                        String upcoming_status3 = status_arr[statusCount+4];
+                        String upcoming_status4 = status_arr[statusCount+4];
+                        String upcoming_status5 = status_arr[statusCount+5];
                     
                         //CHECK FOR BACK TO BACK SHIFTS
-                        if(currentStatus.equals("1") && work_status.equals("0") && upcoming_status.equals("0") && upcoming_status1.equals(("1")) ){
+                        //if(currentStatus.equals("1") && work_status.equals("0") && upcoming_status.equals("0") && upcoming_status1.equals(("1")) ){
+                        if(currentStatus.equals("1") && work_status.equals("1") && upcoming_status.equals("0") && upcoming_status1.equals("0")
+                                && upcoming_status2.equals("0") && upcoming_status2.equals("0") && upcoming_status3.equals("1")
+                                && upcoming_status5.equals("1")){
                             consecutive = 1;
                         }
                         if(consecutive == 1){
-                            for(int i = 0; i < 4; i++){
-                                if(statusCount+2+i < status_arr.length){
-                                    if(status_arr[statusCount+2].equals("0")){
+                            for(int i = 0; i < 8; i++){
+                                if(statusCount+5+i < status_arr.length){
+                                    if(status_arr[statusCount+5+i].equals("0")){
                                         checker2++;
                                     }
                                 }
