@@ -162,6 +162,7 @@ public class WorkerRosteringGenerator {
     private List<Employee> createEmployeeList(int size, List<Skill> generalSkillList, List<TimeSlot> timeSlotList) {
         List<Employee> employeeList = new ArrayList<>(size);
         Random rand = new Random();
+        
         //malay
         for (int i = 0; i < 20; i++) {
             String name = employeeNameGenerator.generateNextValue();
@@ -173,7 +174,13 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, false);
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, false, shiftType);
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.5));
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -191,7 +198,14 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, false);
+            
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, false, shiftType);
 //            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -209,7 +223,14 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, false);
+            
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, false, shiftType);
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             Iterator<TimeSlot> timeslotIter = unavailableTimeSlotSet.iterator();
@@ -229,7 +250,14 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, true);
+            
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, true, shiftType);
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -247,7 +275,14 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, true);
+            
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, true, shiftType);
 //            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
@@ -265,7 +300,14 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(name, skillSet, true);
+            
+            String shiftType = "Morning";
+            
+            if (rand.nextDouble() >= 0.5) {
+                shiftType = "Night";
+            }
+            
+            Employee employee = new Employee(name, skillSet, true, shiftType);
             Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             Iterator<TimeSlot> timeslotIter = unavailableTimeSlotSet.iterator();

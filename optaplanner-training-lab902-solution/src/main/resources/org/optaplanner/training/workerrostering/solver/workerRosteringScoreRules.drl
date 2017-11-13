@@ -62,7 +62,7 @@ rule "At most one shift assignment per day per employee"
         scoreHolder.addHardConstraintMatch(kcontext, -200);
 end
 
-rule "No 2 shifts within 12 hours from each other"
+rule "No 2 shifts within 12 hours from each other (forward)"
     when
         $s : ShiftAssignment(
                 employee != null,
@@ -115,7 +115,7 @@ rule "Employee is available"
                 employee != null,
                 !getEmployee().getUnavailableTimeSlotSet().contains(getTimeSlot()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 155);
+        scoreHolder.addHardConstraintMatch(kcontext, 127);
 end
 
 rule "Is a reserve"
@@ -151,30 +151,7 @@ rule "Should work consecutive shifts (2 days)"
                 $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12
               )
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 21);
-end
-
-rule "Should work not work 3 consecutive shifts"
-    when
-        $s1 : ShiftAssignment(
-                employee != null,
-                $e : employee,
-                $firstStart: getTimeSlot().getStartDateTime(),
-                $firstEnd: getTimeSlot().getEndDateTime()
-              )
-        $s2 : ShiftAssignment(
-                employee == $e,
-                $firstEnd <  getTimeSlot().getStartDateTime(),
-                $firstEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12,
-                $secondEnd: getTimeSlot().getEndDateTime()
-              )
-        $s3 : ShiftAssignment(
-                employee == $e,
-                $secondEnd <  getTimeSlot().getStartDateTime(),
-                $secondEnd.until(getTimeSlot().getStartDateTime(), ChronoUnit.HOURS) == 12
-              )
-    then
-        scoreHolder.addHardConstraintMatch(kcontext, -93);
+        scoreHolder.addHardConstraintMatch(kcontext, 223);
 end
 
 rule "Should not be working after 2 consecutive shifts (forward)"
@@ -229,21 +206,14 @@ rule "Should not be working after 2 consecutive shifts (backward)"
         scoreHolder.addHardConstraintMatch(kcontext, -215);
 end
 
-rule "Should be working in the same shift"
+rule "Should be working in stipulated Shift"
     when
-        $s1 : ShiftAssignment(
+        ShiftAssignment(
                 employee != null,
                 $e : employee,
-                $firstEnd: getTimeSlot().getEndDateTime(),
-                $firstShiftHour: getTimeSlot().getStartDateTime().getHour(),
-                $firstDay : getTimeSlot().getStartDateTime().toLocalDate()
-                )
-        $s2 : ShiftAssignment(
-                employee != null,
-                employee == $e,
-                $firstEnd < getTimeSlot().getEndDateTime(),
-                $firstShiftHour == getTimeSlot().getStartDateTime().getHour(),
-                $firstDay != getTimeSlot().getStartDateTime().toLocalDate())
+                (employee.getShiftType().equals("Morning") && getTimeSlot().getStartDateTime().getHour() == 8) ||
+                (employee.getShiftType().equals("Night") && getTimeSlot().getStartDateTime().getHour() == 20)
+        )
     then
-        scoreHolder.addHardConstraintMatch(kcontext, 97);
+        scoreHolder.addHardConstraintMatch(kcontext, 82);
 end
