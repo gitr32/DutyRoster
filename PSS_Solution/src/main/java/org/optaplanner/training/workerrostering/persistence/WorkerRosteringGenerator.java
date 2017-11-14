@@ -101,13 +101,13 @@ public class WorkerRosteringGenerator {
 //        return c.getActualMaximum(Calendar.DATE);
         return numDays;
     }
-    
+
     public Roster generateRoster(int spotListSize, int timeSlotListSize, boolean continuousPlanning) {
         int employeeListSize = 136;
-        if(spotListSize == 28){
+        if (spotListSize == 28) {
             employeeListSize = 112;
         }
-        
+
         int skillListSize = 6;
         timeSlotListSize = getNumberOfDaysForAMonth(10) * 2;
         RosterParametrization rosterParametrization = new RosterParametrization();
@@ -133,10 +133,10 @@ public class WorkerRosteringGenerator {
     private List<Spot> createSpotList(int size, List<Skill> skillList) {
         List<Spot> spotList = new ArrayList<>(size);
         String name = "Tuas";
-        if(numSpots == 28){
+        if (numSpots == 28) {
             name = "Woodlands";
         }
-        
+
         spotList.add(new Spot(name + 0, new Skill("Mandarin")));
         spotList.add(new Spot(name + 1, new Skill("Malay")));
         spotList.add(new Spot(name + 2, new Skill("Tamil")));
@@ -191,14 +191,14 @@ public class WorkerRosteringGenerator {
     private List<Employee> createEmployeeList(int size, List<Skill> generalSkillList, List<TimeSlot> timeSlotList) {
         List<Employee> employeeList = new ArrayList<>(size);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         //EmployeeController ec = new EmployeeController();
         EmployeeDAO ed = new EmployeeDAO();
         ArrayList<bean.Employee> empList = ed.getAllEmployees();
-        
+
         //get reserve team
         ArrayList<bean.Employee> reserveEmpList = ed.getAllReserveEmployees();
-        
+
         for (int i = 0; i < size; i++) {
             bean.Employee e = empList.get(i);
             LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
@@ -208,9 +208,10 @@ public class WorkerRosteringGenerator {
             } else {
                 skillSet.add(new Skill("fSearch"));
             }
-            Employee employee = new Employee(e.getName(), skillSet, false);
+            Employee employee = new Employee(e.getName(), skillSet, false,e.getShift());
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             String nric = e.getNric();
+            //employee.setShift(e.getShift());
 
             String format = "yyyy-MM-dd'T'HH:mm";
             DateFormat df = new SimpleDateFormat(format);
@@ -240,7 +241,7 @@ public class WorkerRosteringGenerator {
                         Timestamp endTs = new Timestamp(endD.getTime());
                         Timestamp thirdTs = new Timestamp(thirdD.getTime());
                         TimeSlot tee = new TimeSlot(startTs.toLocalDateTime(), endTs.toLocalDateTime());
-                        TimeSlot tee2 = new TimeSlot(endTs.toLocalDateTime(),thirdTs.toLocalDateTime());
+                        TimeSlot tee2 = new TimeSlot(endTs.toLocalDateTime(), thirdTs.toLocalDateTime());
                         tee.setTimeSlotState(TimeSlotState.DRAFT);
                         tee2.setTimeSlotState(TimeSlotState.DRAFT);
                         unavailableTimeSlotSet.add(tee);
@@ -255,15 +256,31 @@ public class WorkerRosteringGenerator {
                 //System.out.println(startTimeSlot.toString());
                 //System.out.println(endTimeSlot.toString());
                 /*
-                Iterator<TimeSlot> iter = unavailableTimeSlotSet.iterator();
-                while(iter.hasNext()){
-                    TimeSlot tssss = iter.next();
-                    System.out.println(tssss.getStartDateTime().toString()+" - "+tssss.getEndDateTime().toString());
-                }
-                */
+                 Iterator<TimeSlot> iter = unavailableTimeSlotSet.iterator();
+                 while(iter.hasNext()){
+                 TimeSlot tssss = iter.next();
+                 System.out.println(tssss.getStartDateTime().toString()+" - "+tssss.getEndDateTime().toString());
+                 }
+                 */
             }
 
             //Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>(extractRandomSubList(timeSlotList, 0.2));
+            employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
+            employeeList.add(employee);
+        }
+
+        for (int i = 0; i < reserveEmpList.size(); i++) {
+            bean.Employee e = reserveEmpList.get(i);
+            LinkedHashSet<Skill> skillSet = new LinkedHashSet<>();
+            skillSet.add(new Skill(e.getLanguageSpoken()));
+            if (e.getGender().equals("Male")) {
+                skillSet.add(new Skill("mSearch"));
+            } else {
+                skillSet.add(new Skill("fSearch"));
+            }
+            Employee employee = new Employee(e.getName(), skillSet, true,"Any");
+            //employee.setShift("Any");
+            Set<TimeSlot> unavailableTimeSlotSet = new LinkedHashSet<>();
             employee.setUnavailableTimeSlotSet(unavailableTimeSlotSet);
             employeeList.add(employee);
         }

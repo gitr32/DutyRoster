@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import bean.JsonTime;
 import bean.Time;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,8 +46,13 @@ public class DisplayAllUnavailableTimeSlotServlet extends HttpServlet {
         EmployeeController ec = new EmployeeController();
         String nric = request.getParameter("nric");
         ArrayList<Time> timeSlot = ec.displayUnavailableTimeSlot(nric);
-        
-        out.println(gson.toJson(timeSlot));
+        ArrayList<JsonTime> returnTimeSlot = new ArrayList<>();
+        for(Time t : timeSlot){
+            String s = t.getStartTime().toLocalDateTime().toString().substring(0,t.getStartTime().toLocalDateTime().toString().indexOf("T"));
+            String e = t.getEndTime().toLocalDateTime().toString().substring(0,t.getEndTime().toLocalDateTime().toString().indexOf("T"));
+            returnTimeSlot.add(new JsonTime(nric,s,e));
+        }
+        out.println(gson.toJson(returnTimeSlot));
         
     }
 

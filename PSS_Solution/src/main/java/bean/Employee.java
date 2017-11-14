@@ -1,5 +1,7 @@
 package bean;
 
+import java.util.Random;
+
 /**
  *
  * @author Alex.Tiang
@@ -13,6 +15,7 @@ public class Employee {
     private String languageSpoken;
     private long points;
     private boolean isReserve;
+    private String shiftType;
 
     public Employee(String nric, String name, String race, String gender, String languageSpoken, long points, boolean isReserve) {
         this.nric = nric;
@@ -22,8 +25,21 @@ public class Employee {
         this.languageSpoken = languageSpoken;
         this.points = points;
         this.isReserve = isReserve;
+        Random d = new Random();
+        double value = d.nextDouble();
+        if(value < 0.05){
+            shiftType = "Morning";
+        }else if(value < 0.10){
+            shiftType = "Night";
+        }else{
+            shiftType = "Any";
+        }
     }
 
+    public String getShift(){
+        return shiftType;
+    }
+    
     public String getNric() {
         return nric;
     }

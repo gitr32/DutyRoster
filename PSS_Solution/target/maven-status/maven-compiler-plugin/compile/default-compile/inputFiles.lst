@@ -4,6 +4,7 @@ C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\servlet\GetS
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\optional\domain\MovableShiftAssignmentFilter.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\domain\Skill.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\persistence\WorkerRosteringSolutionFileIO.java
+C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\servlet\CORSFilter.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\servlet\AddUnavailableTimeSlotServlet.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\domain\RosterParametrization.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\domain\Employee.java
@@ -14,6 +15,7 @@ C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\dao\Employee
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\bean\Employee.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\domain\TimeSlot.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\domain\ShiftAssignmentStrengthComparator.java
+C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\bean\JsonTime.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\org\optaplanner\training\workerrostering\app\WorkerRosteringApp.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\controller\EmployeeController.java
 C:\Users\User\Documents\NetBeansProjects\PSS_Solution\src\main\java\bean\Time.java

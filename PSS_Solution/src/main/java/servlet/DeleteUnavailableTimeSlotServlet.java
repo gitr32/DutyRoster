@@ -36,8 +36,8 @@ public class DeleteUnavailableTimeSlotServlet extends HttpServlet {
         
         EmployeeController ec = new EmployeeController();
         String nric = request.getParameter("nric");
-        String startTimeSlot = request.getParameter("startTimeSlot");
-        String endTimeSlot = request.getParameter("endTimeSlot");
+        String startTimeSlot = request.getParameter("startTimeSlot")+"T08:00";
+        String endTimeSlot = request.getParameter("endTimeSlot")+"T20:00";
         boolean b = ec.deleteTimeSlot(nric,startTimeSlot,endTimeSlot);
         if(b){
             System.out.println("Deleted Successfully");

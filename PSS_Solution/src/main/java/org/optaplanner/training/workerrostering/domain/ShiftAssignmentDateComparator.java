@@ -14,8 +14,18 @@ import java.util.Comparator;
  */
 public class ShiftAssignmentDateComparator implements Comparator<ShiftAssignment> {
     public int compare(ShiftAssignment shiftA, ShiftAssignment shiftB) {
-        String strShiftANum = shiftA.getSpot().getName().substring(4, shiftA.getSpot().getName().length());
-        String strShiftBNum = shiftB.getSpot().getName().substring(4, shiftB.getSpot().getName().length());
+        int startA = 4;
+        int startB = 4;
+        if (shiftA.getSpot().getName().toLowerCase().indexOf("woodlands") >= 0) {
+            startA = "woodlands".length();
+        }
+        
+        if (shiftB.getSpot().getName().toLowerCase().indexOf("woodlands") >= 0) {
+            startB = "woodlands".length();
+        }
+        
+        String strShiftANum = shiftA.getSpot().getName().substring(startA, shiftA.getSpot().getName().length());
+        String strShiftBNum = shiftB.getSpot().getName().substring(startB, shiftB.getSpot().getName().length());
         int shiftANum = Integer.parseInt(strShiftANum);
         int shiftBNum = Integer.parseInt(strShiftBNum);
         

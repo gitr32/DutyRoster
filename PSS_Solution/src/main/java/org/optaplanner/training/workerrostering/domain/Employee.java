@@ -24,19 +24,29 @@ public class Employee {
     private final String name;
     private final Set<Skill> skillSet;
     private final boolean isReserve;
+    private String shiftType;
 
     private Set<TimeSlot> unavailableTimeSlotSet;
 
-    public Employee(String name, Set<Skill> skillSet, boolean isReserve) {
+    public Employee(String name, Set<Skill> skillSet, boolean isReserve, String shiftType) {
         this.name = name;
         this.skillSet = skillSet;
         this.isReserve = isReserve;
+        this.shiftType = shiftType;
     }
 
     public String getName() {
         return name;
     }
-
+    
+    public void setShift(String shiftType){
+        this.shiftType = shiftType;
+    }
+    
+    public String getShift(){
+        return this.shiftType;
+    }
+    
     public Set<Skill> getSkillSet() {
         return skillSet;
     }

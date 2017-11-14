@@ -129,10 +129,11 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                 timeSlot.setTimeSlotState(TimeSlotState.valueOf(row.getCell(2).getStringCellValue()));
                 return timeSlot;
             });
-            List<Employee> employeeList = readListSheet("Employees", new String[]{"Name", "Skills", "isReserve"}, (Row row) -> {
+            List<Employee> employeeList = readListSheet("Employees", new String[]{"Name", "Skills", "isReserve", "ShiftType"}, (Row row) -> {
          
                 String name = row.getCell(0).getStringCellValue();
                 boolean isReserve = row.getCell(2).getBooleanCellValue();
+                String shiftType = row.getCell(3).getStringCellValue();
                 Set<Skill> skillSet = Arrays.stream(row.getCell(1).getStringCellValue().split(",")).map((skillName) -> {
                     Skill skill = skillMap.get(skillName);
                     
@@ -142,7 +143,7 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                     }
                     return skill;
                 }).collect(Collectors.toSet());
-                Employee employee = new Employee(name, skillSet, isReserve);
+                Employee employee = new Employee(name, skillSet, isReserve, shiftType);
                 employee.setUnavailableTimeSlotSet(new LinkedHashSet<>());
                 return employee;
             });
@@ -360,6 +361,7 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
         }
 
         public Workbook writeWorkbook() {
+            
             Map<Pair<Spot, TimeSlot>, ShiftAssignment> spotMap = roster.getShiftAssignmentList().stream()
                     .collect(Collectors.toMap(
                     shiftAssignment -> Pair.of(shiftAssignment.getSpot(), shiftAssignment.getTimeSlot()),
@@ -368,6 +370,15 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                     .collect(Collectors.groupingBy(
                     shiftAssignment -> Pair.of(shiftAssignment.getEmployee(), shiftAssignment.getTimeSlot()),
                     Collectors.toList()));
+            
+            List<Employee> reserveList = new ArrayList<>();
+            
+            for (int i = 0; i < roster.getEmployeeList().size(); i++) {
+                Employee employee = roster.getEmployeeList().get(i);
+                if (employee.getIsReserve()) {
+                    reserveList.add(employee);
+                }
+            }
 
             writeGridSheet("Spot roster", new String[]{"Name"}, roster.getSpotList(), (Row row, Spot spot) -> {
                 row.createCell(0).setCellValue(spot.getName());
@@ -426,11 +437,57 @@ public class WorkerRosteringSolutionFileIO implements SolutionFileIO<Roster> {
                         .map((shiftAssignment) -> shiftAssignment.getSpot().getName())
                         .collect(Collectors.joining(",")));
             });
-            writeListSheet("Employees", new String[]{"Name", "Skills", "isReserve"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
+            
+            writeGridSheet("Reserve roster", new String[]{"Name"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
+                    //row.setRowNum(rowNum);
+                    if (row.getRowNum() < 200) {
+                        row.createCell(0).setCellValue(reserveList.get(row.getRowNum()).getName());
+                    }
+            }, (Cell cell, Pair<Employee, TimeSlot> pair) -> {
+                Employee employee = pair.getKey();
+                TimeSlot timeSlot = pair.getValue();
+          
+           /*     
+                System.out.println("1: "+timeSlot.getStartDateTime().toString() + " - " +timeSlot.getEndDateTime().toString());
+                
+                Iterator<TimeSlot> iter = employee.getUnavailableTimeSlotSet().iterator();
+                while(iter.hasNext()){
+                    TimeSlot t = iter.next();
+                    System.out.println("2: "+t.getStartDateTime().toString() + " - " +t.getEndDateTime().toString());
+                }
+             */ 
+                Set<TimeSlot> tList = employee.getUnavailableTimeSlotSet();
+                Iterator<TimeSlot> iter = tList.iterator();
+                String cheater = "";
+                while(iter.hasNext()){
+                    TimeSlot teee = iter.next();
+                    cheater += teee.toString();
+                }
+                if(cheater.indexOf(timeSlot.toString()) != -1){
+                    cell.setCellStyle(unavailableStyle);
+                }
+                /*
+                if (employee.getUnavailableTimeSlotSet().contains(timeSlot)) {
+                    cell.setCellStyle(unavailableStyle);
+                }
+                */
+                List<ShiftAssignment> shiftAssignmentList = employeeMap.get(pair);
+                if (shiftAssignmentList == null) {
+                    cell.setCellValue(" "); // TODO HACK to get a clearer xlsx file
+                    return;
+                }
+                cell.setCellValue(shiftAssignmentList.stream()
+                        .map((shiftAssignment) -> shiftAssignment.getSpot().getName())
+                        .collect(Collectors.joining(",")));
+            });
+            
+            
+            writeListSheet("Employees", new String[]{"Name", "Skills", "isReserve", "ShiftType"}, roster.getEmployeeList(), (Row row, Employee employee) -> {
                 row.createCell(0).setCellValue(employee.getName());
                 row.createCell(1).setCellValue(employee.getSkillSet().stream()
                         .map(Skill::getName).collect(Collectors.joining(",")));
                 row.createCell(2).setCellValue(employee.getIsReserve());
+                row.createCell(3).setCellValue(employee.getShift());
             });
             writeListSheet("Timeslots", new String[]{"Start", "End", "State"}, roster.getTimeSlotList(), (Row row, TimeSlot timeSlot) -> {
                 row.createCell(0).setCellValue(timeSlot.getStartDateTime().format(DATE_TIME_FORMATTER));

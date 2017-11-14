@@ -3,6 +3,7 @@ org\optaplanner\training\workerrostering\domain\Skill.class
 org\optaplanner\training\workerrostering\domain\TimeSlotState.class
 org\optaplanner\training\workerrostering\persistence\StringDataGenerator.class
 org\optaplanner\training\workerrostering\domain\Roster.class
+servlet\CORSFilter.class
 org\optaplanner\training\workerrostering\persistence\WorkerRosteringGenerator.class
 bean\Time.class
 utility\ConnectionManager.class
@@ -12,6 +13,7 @@ org\optaplanner\training\workerrostering\domain\ShiftAssignment.class
 servlet\GetScheduleServlet.class
 org\optaplanner\training\workerrostering\persistence\WorkerRosteringSolutionFileIO$RosterReader.class
 org\optaplanner\training\workerrostering\domain\ShiftAssignmentDateComparator.class
+bean\JsonTime.class
 org\optaplanner\training\workerrostering\domain\Spot.class
 org\optaplanner\training\workerrostering\domain\TimeSlot.class
 org\optaplanner\training\workerrostering\optional\domain\MovableShiftAssignmentFilter.class
